@@ -242,7 +242,7 @@ function renderMonth(year, monthIndex, busyMap) {
     const none = document.createElement("div");
     none.className = "muted";
     none.style.fontSize = "13px";
-    none.textContent = "Keine Vermietungen an Mo–Do.";
+    none.textContent = "Montag bis Donnerstag nicht belegt.";
     monthEl.appendChild(none);
   } else {
     const list = document.createElement("ul");
