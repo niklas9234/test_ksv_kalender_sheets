@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Belegungskalender</title>
+
+  <link rel="stylesheet" href="./style.css" />
+  <script src="./app.js" defer></script>
+</head>
+
+<body>
+  <main class="page">
+    <header class="header">
+      <div>
+        <h1 class="title">Belegungskalender</h1>
+        <p class="subtitle">
+          Wochenenden (Fr–So) als Überblick · Mo–Do nur bei Vermietung
+        </p>
+      </div>
+
+      <div class="controls" role="group" aria-label="Kalender Steuerung">
+        <label class="control">
+          <span>Jahr</span>
+          <select id="cc-year"></select>
+        </label>
+
+        <button id="cc-reload" type="button">Neu laden</button>
+        <span id="cc-status" class="status" aria-live="polite"></span>
+      </div>
+    </header>
+
+    <section id="cc-root" class="months" aria-label="Kalender"></section>
+
+    <footer class="legend" aria-label="Legende">
+      <span><span class="dot dot-free"></span>frei</span>
+      <span><span class="dot dot-busy"></span>belegt</span>
+    </footer>
+  </main>
+</body>
+</html>
