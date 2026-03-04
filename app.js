@@ -16,7 +16,7 @@ const MONTHS_DE = [
   "Juli", "August", "September", "Oktober", "November", "Dezember"
 ];
 
-const DOW_DE = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]; // Anzeige
+const DOW_DE = ["MO", "DI", "MI", "DO", "FR", "SA", "SO"]; // Anzeige
 
 function isoDate(d) {
   const y = d.getFullYear();
@@ -135,36 +135,32 @@ function applySaturdayBlocksSunday(baseMap) {
 }
 
 // --- Rendering ---
-function createDayCell({ year, monthIndex, dayNum, busyMap }) {
-  const d = new Date(year, monthIndex, dayNum);
-  const key = isoDate(d);
+function createDayCell({ date, busyMap }) {
+  const dowIndex = monFirstDowIndex(date);
+  const isWeekendColumn = dowIndex >= 4; // Fr, Sa, So
+  const key = isoDate(date);
   const booked = busyMap.has(key);
 
   const cell = document.createElement("div");
-  cell.className = `day ${booked ? "busy" : "free"}`;
+  cell.className = `day ${booked ? "busy" : "free"} ${isWeekendColumn ? "long" : "short"}`;
 
   const top = document.createElement("div");
   top.className = "top";
 
   const num = document.createElement("div");
   num.className = "num";
-  num.textContent = String(dayNum);
-
-  const badge = document.createElement("div");
-  badge.className = "badge";
-  badge.textContent = DOW_DE[monFirstDowIndex(d)];
+  num.textContent = String(date.getDate());
 
   top.appendChild(num);
-  top.appendChild(badge);
 
   const bottom = document.createElement("div");
   bottom.className = "bottom";
-  bottom.textContent = booked ? "belegt" : "frei";
+  bottom.textContent = isWeekendColumn ? (booked ? "belegt" : "frei") : "";
 
   cell.appendChild(top);
   cell.appendChild(bottom);
 
-  const label = busyMap.get(key) || formatDisplayDE(d);
+  const label = busyMap.get(key) || formatDisplayDE(date);
   cell.title = booked ? `${label} – belegt` : `${label} – frei`;
 
   return cell;
@@ -172,7 +168,8 @@ function createDayCell({ year, monthIndex, dayNum, busyMap }) {
 
 function createPlaceholder() {
   const el = document.createElement("div");
-  el.className = "day out";
+  el.className = "day out placeholder";
+  el.setAttribute("aria-hidden", "true");
   return el;
 }
 
@@ -186,10 +183,10 @@ function renderMonth(year, monthIndex, busyMap) {
 
   const dow = document.createElement("div");
   dow.className = "cal-dow";
-  for (const d of DOW_DE) {
-    const x = document.createElement("div");
-    x.textContent = d;
-    dow.appendChild(x);
+  for (const dayLabel of DOW_DE) {
+    const el = document.createElement("div");
+    el.textContent = dayLabel;
+    dow.appendChild(el);
   }
   monthEl.appendChild(dow);
 
@@ -201,17 +198,22 @@ function renderMonth(year, monthIndex, busyMap) {
   const dim = daysInMonth(year, monthIndex);
 
   // leading placeholders
-  for (let i = 0; i < pad; i++) grid.appendChild(createPlaceholder());
-
-  // actual days
-  for (let day = 1; day <= dim; day++) {
-    grid.appendChild(createDayCell({ year, monthIndex, dayNum: day, busyMap }));
+  for (let i = 0; i < pad; i++) {
+    grid.appendChild(createPlaceholder());
   }
 
-  // trailing placeholders to complete last week
+  // actual days (only days that belong to this month)
+  for (let day = 1; day <= dim; day++) {
+    const date = new Date(year, monthIndex, day);
+    grid.appendChild(createDayCell({ date, busyMap }));
+  }
+
+  // trailing placeholders to complete the last week
   const total = pad + dim;
   const rest = (7 - (total % 7)) % 7;
-  for (let i = 0; i < rest; i++) grid.appendChild(createPlaceholder());
+  for (let i = 0; i < rest; i++) {
+    grid.appendChild(createPlaceholder());
+  }
 
   monthEl.appendChild(grid);
   return monthEl;
