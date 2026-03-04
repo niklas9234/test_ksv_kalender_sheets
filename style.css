@@ -1,3 +1,5 @@
+/* style.css – simpler month-only grid (7 gleich breite Spalten) */
+
 :root {
   --border: #eee;
   --text-muted: #666;
@@ -8,6 +10,11 @@
 
   --busy-bg: #ffe5e5;
   --busy-border: #ffb3b3;
+
+  --cell-bg: #fff;
+
+  --cell-h: 58px;
+  --gap: 6px;
 }
 
 * { box-sizing: border-box; }
@@ -34,10 +41,7 @@ body {
   margin-bottom: 16px;
 }
 
-.title {
-  margin: 0;
-  font-size: 22px;
-}
+.title { margin: 0; font-size: 22px; }
 
 .subtitle {
   margin: 6px 0 0;
@@ -77,14 +81,13 @@ button { cursor: pointer; }
   align-items: center;
 }
 
-.muted { color: var(--text-muted); }
-
 .months {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 12px;
 }
 
+/* Month card */
 .month {
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -96,96 +99,90 @@ button { cursor: pointer; }
   font-size: 16px;
 }
 
-.section-title {
-  margin: 12px 0 6px;
-  font-size: 12px;
-  color: var(--text-muted);
-  letter-spacing: .02em;
-  text-transform: uppercase;
-}
-
-.weekend-grid {
+/* DOW header row + calendar grid */
+.cal-dow {
   display: grid;
-  gap: 8px;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--gap);
+  margin-bottom: 6px;
 }
 
-.weekend-row {
+.cal-dow div {
+  font-size: 11px;
+  color: var(--dow);
+  text-align: center;
+}
+
+.cal-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--gap);
 }
 
-.cell {
+/* Day cell */
+.day {
   border: 1px solid var(--border);
   border-radius: 10px;
-  padding: 8px 6px;
-  min-height: 44px;
+  background: var(--cell-bg);
+  height: var(--cell-h);
+  padding: 8px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
   user-select: none;
 }
 
-.free {
+.day .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  align-items: baseline;
+  min-height: 18px;
+}
+
+.day .num {
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.day .badge {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  line-height: 1.1;
+}
+
+/* fixed bottom slot */
+.day .bottom {
+  height: 14px;
+  line-height: 14px;
+  font-size: 11px;
+  color: #222;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* states */
+.day.free {
   background: var(--free-bg);
   border-color: var(--free-border);
 }
 
-.busy {
+.day.busy {
   background: var(--busy-bg);
   border-color: var(--busy-border);
 }
 
-.out {
-  opacity: 0.35;
+/* out-of-month placeholders */
+.day.out {
+  opacity: 0.25;
+  background: transparent;
 }
 
-.cell-top {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  align-items: baseline;
-}
-
-.day {
-  font-weight: 700;
-  font-size: 13px;
-}
-
-.dow {
-  font-size: 11px;
-  color: var(--dow);
-}
-
-.tag {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-top: 4px;
-}
-
-.weekday-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: 6px;
-}
-
-.weekday-item {
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 8px 10px;
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.weekday-item .label {
-  font-size: 13px;
-}
-
-.weekday-item .pill {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
+/* Legend */
 .legend {
   display: flex;
   gap: 14px;
@@ -206,5 +203,12 @@ button { cursor: pointer; }
   vertical-align: -1px;
 }
 
-.dot-free { background: var(--free-bg); border-color: var(--free-border); }
-.dot-busy { background: var(--busy-bg); border-color: var(--busy-border); }
+.dot-free {
+  background: var(--free-bg);
+  border-color: var(--free-border);
+}
+
+.dot-busy {
+  background: var(--busy-bg);
+  border-color: var(--busy-border);
+}
