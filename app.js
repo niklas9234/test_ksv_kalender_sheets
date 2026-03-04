@@ -5,7 +5,7 @@
 const CC_CSV_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcFOBJa--mTuXyw4fDP_T7vu4r2g_p89Q8FRt5cWMMdE7FDnIM2lD9JFncfHyYplApE-LV7yr-svEn/pub?gid=102280899&single=true&output=csv";
 
-// Jahre: aktuelles + nächstes
+// Jahr-Auswahl: aktuelles + nächstes Jahr
 function getYearOptions() {
   const y = new Date().getFullYear();
   return [y, y + 1];
